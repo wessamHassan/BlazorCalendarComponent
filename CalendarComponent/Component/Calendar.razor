@@ -1,0 +1,36 @@
+﻿@using System.Globalization
+@if (ShowDialog)
+{
+    <div class="calendar">
+        <div style="background-color: #f0f0f0">
+            <div class="month">
+                <div class="prev" @onclick="PrevMonth" style="margin-left: 10px">&#10094;</div>
+
+                <div class="date">
+                    @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(CurrentMonth) @CurrentYear
+                </div>
+                <div class="next" @onclick="NextMonth" style="margin-right: 10px">&#10095;</div>
+            </div>
+            <div class="weekdays">
+                @foreach (var day in CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedDayNames)
+                {
+                    <div>@day.Substring(0,2)</div>
+                }
+            </div>
+            <hr/>
+        </div>
+        <div style ="margin-bottom: 5px;"></div>
+        <div class="days">
+            @for (var i = 0; i < FirstDayOfMonth.DayOfWeek - CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek; i++)
+            {
+                <div class="day" style=" background-color: white"></div>
+            }
+            @for (var i = 1; i <= DaysInMonth; i++)
+            {
+                var dayNum = i;
+                <div class="day @(i == SelectedDay ? "selected" : "")" @onclick="(() => SelectDay(dayNum))">@i</div>
+            }
+        </div>
+
+    </div>
+}

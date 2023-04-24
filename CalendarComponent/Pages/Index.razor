@@ -1,0 +1,41 @@
+﻿@page "/"
+@using CalendarComponent.Component
+@inject IJSRuntime JsRuntime
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to my Calendar which looks like React one.
+ <div >
+        <label>Date</label>
+        <input type="text" @onclick="OpenCalendar" @bind-value="StartDateValue" readonly />
+        <div style=" position: absolute;z-index: 999;" tabindex="0" @ref="CalDiv" @onfocusout="CalFocusOut">
+            <Calendar @ref="CalenderForm" CloseEventCallback="@OnCalendarClose" Value="@dateValue"></Calendar>
+        </div>
+ </div>
+
+ @code
+ {
+      protected Calendar? CalenderForm { get; set; }
+      string? StartDateValue { get; set; }
+      protected ElementReference CalDiv;
+       protected DateTime? dateValue { get; set; } 
+
+        private async void OpenCalendar()
+        {
+            CalenderForm!.Show();
+            await JsRuntime.InvokeVoidAsync("SetFocusToElement", CalDiv);
+        }
+        private void CalFocusOut()
+        {
+            CalenderForm!.Hide();
+        }
+        protected void OnCalendarClose()
+        {
+            if (CalenderForm!.SelectedDate != null) StartDateValue = CalenderForm.SelectedDate.Value.ToString("yyyy-MM-dd");
+            StateHasChanged();
+        }
+
+ }
+
